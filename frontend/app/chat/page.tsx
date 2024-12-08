@@ -40,6 +40,42 @@ const Chat=()=>{
     const chatReceiver = useChatReceiverStore(state => state.chatReceiver);
 
     if(authName=='')router.replace('/');
+    useEffect(()=>{
+
+        const getting=async()=>{
+            const res=await axios.get("http://localhost:8083/getting/user",{withCredentials:true});
+            console.log("the response from getting is",res.data);
+            updateUsers(res.data);
+            
+        }
+        getting();
+    },[]);
+    useEffect(()=> {
+        const socket=io('http://localhost:8083',{
+            query:{
+                username:authName
+            }
+        });
+
+        if(socket){
+            console.log('connected from client');
+            setSocket(socket);
+
+            
+
+            socket.on('chat msg',(msg)=>{
+              
+                console.log("this message is being received in frontend",msg);
+                //here things are getting overwritten for some reason
+                const naya=[...conversation,msg];
+                updateConversation(naya);
+                console.log("the updated conversation is",conversation);
+            })
+        }
+
+        return ()=>socket.close();
+    },[]);
+
 
     const sendMsg=(e)=>{
         e.preventDefault();
@@ -61,41 +97,11 @@ const Chat=()=>{
     }
 
 
-    useEffect(()=>{
-
-        const getting=async()=>{
-            const res=await axios.get("http://localhost:8081/getting/user",{withCredentials:true});
-            console.log("the response from getting is",res.data);
-            updateUsers(res.data);
-            
-        }
-        getting();
-    },[])
+   
     
 
-    useEffect(()=> {
-        const socket=io('http://localhost:8080',{
-            query:{
-                username:authName
-            }
-        });
+   
 
-        if(socket){
-            console.log('connected from client');
-            setSocket(socket);
-
-            
-
-            socket.on('chat msg',(msg)=>{
-              
-                console.log("this message is being received in frontend",msg);
-                updateConversation([...conversation,msg]);
-                console.log("the updated conversation is",conversation);
-            })
-        }
-
-        return ()=>socket.close();
-    },[]);
     return (
         <div className='h-screen flex divide-x-4 relative'>
             <div className='w-1/5 '>

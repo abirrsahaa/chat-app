@@ -62,7 +62,7 @@ io.on("connection",(socket)=>{
         // !trying to create a one on one connection 
         const receiverSocket = userSocketMap[msg.receiver];
         if(receiverSocket){
-            receiverSocket.emit('chat message',msg);
+            receiverSocket.emit('chat msg',msg);
         }
 
         // io.emit('chat message',msg); // this is done when we want everyone to get the message including the sender also 

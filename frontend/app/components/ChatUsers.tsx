@@ -25,7 +25,7 @@ const ChatUsers = () => {
 
  useEffect(()=>{
   const getting=async()=>{
-    const res=await axios.get("http://localhost:8080/msg",{
+    const res=await axios.get("http://localhost:8083/msg",{
       params:{
         sender:authName,
         receiver:chatReceiver

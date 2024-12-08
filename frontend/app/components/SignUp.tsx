@@ -20,7 +20,7 @@ const SignUp=()=>{
         e.preventDefault();
 
        try {
-         const res=await axios.post('http://localhost:8081/auth/signup',{username:username,password:password},{withCredentials:true});
+         const res=await axios.post('http://localhost:8083/auth/signup',{username:username,password:password},{withCredentials:true});
          console.log("the response from signup is",res);
          if(res.data.message==="User already exists"){
             router.replace('/');
@@ -43,7 +43,7 @@ const SignUp=()=>{
         e.preventDefault();
 
        try {
-         const res=await axios.post('http://localhost:8081/auth/login',{username:username,password:password},{withCredentials:true});
+         const res=await axios.post('http://localhost:8083/auth/login',{username:username,password:password},{withCredentials:true});
          console.log("the response from login is",res);
          if(res.data.message==="User does not exist"){
                 router.replace('/');
