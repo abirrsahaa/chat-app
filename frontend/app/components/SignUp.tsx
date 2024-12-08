@@ -2,14 +2,19 @@
 import axios from "axios";
 // import Router from "next/router";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import {  useState } from "react";
+import { useAuthStore } from "../zustand/useAuthStore";
 
 const SignUp=()=>{
+
+    const {updateAuthName}=useAuthStore();
 
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
 
     const router = useRouter();
+
+    
 
     const signUpFunc = async (e) => {
         e.preventDefault();
@@ -18,10 +23,12 @@ const SignUp=()=>{
          const res=await axios.post('http://localhost:8081/auth/signup',{username:username,password:password},{withCredentials:true});
          console.log("the response from signup is",res);
          if(res.data.message==="User already exists"){
+            router.replace('/');
                 alert("User already exists");
 
          }
          else{
+            updateAuthName(username);
             router.replace('/chat');
          }
        } catch (error) {
@@ -39,10 +46,13 @@ const SignUp=()=>{
          const res=await axios.post('http://localhost:8081/auth/login',{username:username,password:password},{withCredentials:true});
          console.log("the response from login is",res);
          if(res.data.message==="User does not exist"){
+                router.replace('/');
                 alert("User does not exist");
             } else if(res.data.message==="Invalid credentials"){
+                router.replace('/');
                 alert("Password is incorrect");
             }else{
+            updateAuthName(username);
             router.replace('/chat');
             }
 
